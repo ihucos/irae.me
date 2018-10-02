@@ -1,0 +1,15 @@
+#!/usr/bin/env plash-exec
+
+--from alpine
+--apk py3-pip
+--layer
+--pip3 flask
+--layer
+--hint use-env SECRET_KEY
+--layer
+--hash-path ./index.py
+--run
+cp ./index.py /usr/local/bin/index.py
+chmod +x /usr/local/bin/index.py
+
+--entrypoint /usr/local/bin/index.py
