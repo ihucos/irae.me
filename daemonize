@@ -1,0 +1,34 @@
+#!/usr/bin/env plash-exec
+
+--from alpine
+--apk py3-pip supervisor git unionfs-fuse
+
+--layer
+--pip3 plash
+--layer
+
+--run
+mkdir /opt /etc/supervisor.d
+
+--write-script /etc/supervisor.d/iraeme.ini
+[program:iraeme]
+command=/opt/irae.me/serve
+directory=/opt/irae.me
+autostart=true
+autorestart=true
+startretries=3
+environment=PLASH_DATA=/home/ihucos/.plashdata
+
+--run
+cd /opt/
+git clone https://github.com/ihucos/irae.me.git
+plash init
+
+--entrypoint-script
+set -eux
+export PATH # ubuntu does not export by path, see bug #xxx
+mount -t tmpfs tmpfs /run
+mount -t tmpfs tmpfs /home/ihucos/.plashdata/mnt
+pkill supervisord # holz hammer
+supervisord
+supervisorctl tail -f iraeme stderr
