@@ -7,6 +7,7 @@
 --pip3 plash
 --layer
 
+--invalidate-layer
 --run
 mkdir /opt /etc/supervisor.d
 cd /opt/
@@ -27,7 +28,8 @@ startretries=3
 set -eux
 export PATH # ubuntu does not export by path, see bug #xxx
 mount -t tmpfs tmpfs /run
-mount -t tmpfs tmpfs ~/.plashdata/mnt
-pkill supervisord # holz hammer
-PLASH_DATA=~/.plashdata supervisord
+#mount -t tmpfs tmpfs ~/.plashdata/mnt
+#pkill supervisord # holz hammer
+#PLASH_DATA=~/.plashdata supervisord
+supervisord
 supervisorctl tail -f iraeme stderr
