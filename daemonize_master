@@ -9,6 +9,9 @@
 
 --run
 mkdir /opt /etc/supervisor.d
+cd /opt/
+git clone https://github.com/ihucos/irae.me.git
+plash init
 
 --write-script /etc/supervisor.d/iraeme.ini
 [program:iraeme]
@@ -17,18 +20,14 @@ directory=/opt/irae.me
 autostart=true
 autorestart=true
 startretries=3
-environment=PLASH_DATA=/home/ihucos/.plashdata
 
---run
-cd /opt/
-git clone https://github.com/ihucos/irae.me.git
-plash init
+--layer
 
 --entrypoint-script
 set -eux
 export PATH # ubuntu does not export by path, see bug #xxx
 mount -t tmpfs tmpfs /run
-mount -t tmpfs tmpfs /home/ihucos/.plashdata/mnt
+mount -t tmpfs tmpfs ~/.plashdata/mnt
 pkill supervisord # holz hammer
-supervisord
+PLASH_DATA=~/.plashdata supervisord
 supervisorctl tail -f iraeme stderr
