@@ -32,7 +32,7 @@ def write_msg(ip, nick, msg):
     nick = nick.replace('\n', '')
     msg = msg.replace('\n', '')
     with open(DBFILE, 'a') as f:
-        f.write('{ip: <16} |{isp: <8} |{time: <8} |{city: <8} |{nick: >12} |{msg}\n'.format(
+        f.write('[{isp: <8}] {time: <8} {ip: <16} {city: <8} {nick: >12}: {msg}\n'.format(
             ip=ip,
             isp=ip_info['isp'][:8],
             city=ip_info['city'][:8],
@@ -43,7 +43,7 @@ def write_msg(ip, nick, msg):
 
 @app.route("/msgs")
 def msgs():
-    resp_content = subprocess.check_output(['tail', '-n', '100',
+    resp_content = subprocess.check_output(['tail', '-n', '500',
                                             DBFILE]).decode()
     resp_content = '\n'.join(reversed(resp_content.splitlines()))
     resp = flask.Response(resp_content)
