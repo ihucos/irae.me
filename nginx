@@ -1,0 +1,20 @@
+#!/usr/bin/env plash-exec
+--from alpine
+--apk nginx
+--layer
+
+--run
+mkdir /run/nginx
+--layer
+
+--hash-path ./nginx.conf
+
+--run
+cp -v ./nginx.conf /etc/nginx/conf.d/default.conf
+
+--entrypoint-generate
+[main]
+entrypoint=nginx
+nohome=true
+[volumes]
+nginx-pid-file=/run/nginx

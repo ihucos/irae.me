@@ -1,0 +1,21 @@
+#!/usr/bin/env plash-exec
+
+
+--eval-file ./serve
+
+--write-script /main
+case "$1" in
+start)
+exec start-stop-daemon --background --make-pidfile --exec index.py --pidfile /run/pidfile --start
+;;
+stop)
+exec start-stop-daemon --exec index.py --pidfile /run/pidfile --stop
+esac
+echo  'usage: servectl [start | stop]'
+exit 1
+--entrypoint-generate
+
+[main]
+entrypoint=/main
+[volumes]
+daemon_run=/run

@@ -1,0 +1,28 @@
+#!/usr/bin/env plash-exec
+
+--from alpine
+--apk docker
+--layer
+
+--entrypoint-generate
+[main]
+entrypoint=/main
+[volumes]
+docker-daemon-run=/run
+docker-daemon-data=/var/lib/docker
+
+--write-script /main
+if [ "$1" = start-daemon ]; then
+  exec start-stop-daemon \
+    --exec dockerd \
+    --pidfile /run/docker-daemon.pid \
+    --make-pidfile \
+    --background \
+    --start
+elif [ "$1" = stop-daemon ]; then
+  exec start-stop-daemon \
+    --exec dockerd \
+    --pidfile /run/docker-daemon.pid \
+    --stop
+fi
+exec docker "$@"
